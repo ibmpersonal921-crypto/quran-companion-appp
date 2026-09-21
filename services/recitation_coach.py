@@ -1,16 +1,21 @@
 from faster_whisper import WhisperModel
-import difflib, re
+import difflib
+import re
 from config import WHISPER_MODEL_SIZE
 
+# Load model once at startup
 model = WhisperModel(WHISPER_MODEL_SIZE, device="cpu", compute_type="int8")
 
 def normalize_arabic(text):
-    text = re.sub(r'[ًٌٍَُِّْٰٕٖٓٔ]', '', text)
+    text = re.sub(r'[ًٌٍَُِّْٰٖٓٔ]', '', text)
     return text.replace('آ', 'ا').replace('ى', 'ي').replace('ة', 'ه').strip()
 
 def transcribe_audio(audio_file_path):
     segments, info = model.transcribe(audio_file_path, language="ar")
-    return normalize_arabic(" ".join([s.text for s in segments]))
+    full_text = ""
+    for segment in segments:
+        full_text += segment.text + " "
+    return normalize_arabic(full_text)
 
 def compare_recitation(target_text, transcribed_text):
     target_words = normalize_arabic(target_text).split()
