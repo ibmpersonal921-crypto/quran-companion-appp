@@ -1,13 +1,12 @@
 """
 config.py
-Central place for every "magic value" in the app: colors, API bases,
-reciter list, translation editions, and default settings.
+Central place for every "magic value" in the app.
 """
 import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()  # loads ANTHROPIC_API_KEY etc. from a local .env file, if present
+load_dotenv()
 
 # Paths
 BASE_DIR = Path(__file__).resolve().parent
@@ -21,7 +20,7 @@ APP_NAME = "Quran Study Companion"
 APP_TAGLINE = "Read · Listen · Reflect"
 APP_ICON = "📖"
 
-# Theme — emerald green
+# Theme
 THEME = {
     "bg_start": "#04120c",
     "bg_end": "#0b2e22",
@@ -78,13 +77,13 @@ HADITH_COLLECTIONS = {
     "Sunan Ibn Majah": ("eng-ibnmajah", "urd-ibnmajah"),
 }
 
-# AI chatbot (Claude API)
+# AI chatbot
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 CHAT_MODEL = os.getenv("CLAUDE_MODEL", "claude-haiku-4-5-20251001")
 CHAT_MAX_TOKENS = 1000
 
-# Recitation coach — CHANGE THIS TO "tiny" for Streamlit Cloud
-WHISPER_MODEL_SIZE = os.getenv("WHISPER_MODEL_SIZE", "tiny")  # Changed from "small" to "tiny"
+# Recitation coach
+WHISPER_MODEL_SIZE = os.getenv("WHISPER_MODEL_SIZE", "tiny")
 FEEDBACK_LANGUAGES = {"Arabic": "ar", "Urdu": "ur", "English": "en"}
 
 # Verse of the Day
