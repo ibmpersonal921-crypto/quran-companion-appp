@@ -1,3 +1,7 @@
+"""
+app.py
+Entry point for the Streamlit multipage app.
+"""
 import streamlit as st
 from config import APP_NAME, APP_TAGLINE, APP_ICON, DAILY_GOAL_POINTS
 from utils.helpers import inject_css, page_header, compute_streak
@@ -8,6 +12,7 @@ st.set_page_config(page_title=f"{APP_NAME} — Dashboard", page_icon=APP_ICON, l
 db.init_db()
 inject_css()
 
+# Sidebar branding
 with st.sidebar:
     st.markdown(f"""
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
@@ -20,9 +25,10 @@ with st.sidebar:
     """, unsafe_allow_html=True)
     st.markdown("<hr class='qsc-divider'/>", unsafe_allow_html=True)
 
+# Header + search
 top_l, top_r = st.columns([3, 2])
 with top_l:
-    page_header("Dashboard", "Welcome back — here's your study space for today.", "🏠")
+    page_header("Dashboard", "Welcome back — here's your study space for today.", "")
 with top_r:
     st.write("")
     quick_q = st.text_input("search", placeholder="Search or ask AI (e.g., 'Al-Fatiha tafsir')", label_visibility="collapsed")
@@ -30,6 +36,7 @@ with top_r:
         st.session_state["prefill_chat_question"] = quick_q
         st.info("Open **AI Companion** in the sidebar — your question is ready there. 🤖")
 
+# Stats
 completion_dates = db.get_all_completion_dates()
 streak = compute_streak(completion_dates)
 total_points = db.get_total_points()
@@ -42,7 +49,7 @@ stats = [
     (s1, "🔥", streak, "Day Streak"),
     (s2, "⭐", total_points, "Total Points"),
     (s3, "✅", f"{done_today}/{len(goals_today)}", "Goals Today"),
-    (s4, "➕", points_today, "Points Today"),
+    (s4, "", points_today, "Points Today"),
 ]
 for col, emoji, value, label in stats:
     with col:
@@ -50,6 +57,7 @@ for col, emoji, value, label in stats:
 
 st.write("")
 
+# Verse of the Day
 with st.spinner("Loading today's verse..."):
     verse = quran_api.get_verse_of_the_day()
     st.markdown('<div class="qsc-card">', unsafe_allow_html=True)
@@ -69,15 +77,17 @@ with st.spinner("Loading today's verse..."):
     
     colA, colB = st.columns([1, 5])
     with colA:
-        if st.button("➕ Add as today's goal"):
+        if st.button(" Add as today's goal"):
             db.add_goal("memorize_verse", f"Learn {verse.get('label')}", DAILY_GOAL_POINTS["memorize_verse"])
             st.success("Added to today's goals!")
             st.rerun()
 st.markdown("</div>", unsafe_allow_html=True)
 
+# Daily goals
 st.markdown('<div class="qsc-card">', unsafe_allow_html=True)
 st.markdown('<span class="qsc-label">Today\'s goals</span>', unsafe_allow_html=True)
 st.write("")
+
 with st.form("add_goal_form", clear_on_submit=True):
     gcol1, gcol2 = st.columns([4, 1])
     with gcol1:
