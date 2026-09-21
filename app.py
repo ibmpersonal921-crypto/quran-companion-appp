@@ -28,7 +28,7 @@ with st.sidebar:
 # Header + search
 top_l, top_r = st.columns([3, 2])
 with top_l:
-    page_header("Dashboard", "Welcome back — here's your study space for today.", "")
+    page_header("Dashboard", "Welcome back — here's your study space for today.", "🏠")
 with top_r:
     st.write("")
     quick_q = st.text_input("search", placeholder="Search or ask AI (e.g., 'Al-Fatiha tafsir')", label_visibility="collapsed")
@@ -49,7 +49,7 @@ stats = [
     (s1, "🔥", streak, "Day Streak"),
     (s2, "⭐", total_points, "Total Points"),
     (s3, "✅", f"{done_today}/{len(goals_today)}", "Goals Today"),
-    (s4, "", points_today, "Points Today"),
+    (s4, "➕", points_today, "Points Today"),
 ]
 for col, emoji, value, label in stats:
     with col:
@@ -77,10 +77,12 @@ with st.spinner("Loading today's verse..."):
     
     colA, colB = st.columns([1, 5])
     with colA:
-        if st.button(" Add as today's goal"):
+        if st.button("➕ Add as today's goal"):
             db.add_goal("memorize_verse", f"Learn {verse.get('label')}", DAILY_GOAL_POINTS["memorize_verse"])
             st.success("Added to today's goals!")
             st.rerun()
+else:
+    st.warning("Couldn't reach the Quran API right now — check your internet connection and reload.")
 st.markdown("</div>", unsafe_allow_html=True)
 
 # Daily goals
